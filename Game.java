@@ -12,58 +12,62 @@ public class Game {
 
     public Game(String n, Rule[] rs) {
         this.name = n;
-        int count = 0;
-        int availableSlots = 0;
 
-        // this counts the avaliable spaces
+        int rsLength = rs.length;
+        int rulesRemainingSpaces = 0;
+
         for (int i = 0; i < rules.length; i++) {
             if (rules[i] == null) {
-                availableSlots++;
+                rulesRemainingSpaces++;
             }
         }
 
-        if (rs.length > availableSlots) {
-            System.out.println("WARNING: Not enough space for all rules. Only " + availableSlots + " out of " + rs.length + " rules were added.");
-        }
+        if (rsLength <= rulesRemainingSpaces) {
+            int emptyIndex = (rules.length - rulesRemainingSpaces) - 1; // subtracting 1 because arrays are [length - 1]
+            int rsIndex = 0;
 
-
-        for (int i = 0; i < rules.length && count < rs.length; i++) {
-            if (rules[i] == null) {
-                rules[i] = rs[count];
-                count++;
+            for (int i = emptyIndex; i < rulesRemainingSpaces; i++) {
+                rules[emptyIndex] = rs[rsIndex];
+                rsIndex++;
             }
+
+            numRules += rsLength;
         }
 
-        numRules += count;
+        else {
+            System.out.println("ERROR: not enough remaining space for given array");
+        }
     }
-
 
     public Game(String n, Rule[] rs, int t, int ts) {
         this.name = n;
         this.teams = t;
         this.teamSize = ts;
-        int count = 0;
-        int availableSlots = 0;
+
+        int rsLength = rs.length;
+        int rulesRemainingSpaces = 0;
 
         for (int i = 0; i < rules.length; i++) {
             if (rules[i] == null) {
-                availableSlots++;
+                rulesRemainingSpaces++;
             }
         }
 
-        if (rs.length > availableSlots) {
-            System.out.println("WARNING: Not enough space for all rules. Only " + availableSlots + " out of " + rs.length + " rules were added.");
-        }
+        if (rsLength <= rulesRemainingSpaces) {
+            int emptyIndex = (rules.length - rulesRemainingSpaces) - 1; // subtracting 1 because arrays are [length - 1]
+            int rsIndex = 0;
 
-
-        for (int i = 0; i < rules.length && count < rs.length; i++) {
-            if (rules[i] == null) {
-                rules[i] = rs[count];
-                count++;
+            for (int i = emptyIndex; i < rulesRemainingSpaces; i++) {
+                rules[emptyIndex] = rs[rsIndex];
+                rsIndex++;
             }
+
+            numRules += rsLength;
         }
 
-        numRules += count;
+        else {
+            System.out.println("ERROR: not enough remaining space for given array");
+        }
     }
 
 
@@ -88,20 +92,31 @@ public class Game {
     }
 
     public void setTeamSize(int set) {
-        this.teamSize = set;
+        this.teams = set;
     }
 
     public boolean addRule(Rule r) {
+        int rulesRemainingSpaces = 0;
+
         for (int i = 0; i < rules.length; i++) {
             if (rules[i] == null) {
-                rules[i] = r;
-                numRules++;
-                return true;
+                rulesRemainingSpaces++;
             }
         }
-        return false; // this happens when no empty slots are there
-    }
 
+        if (rulesRemainingSpaces >= 1) {
+            int emptyIndex = (rules.length - rulesRemainingSpaces) - 1; // subtracting 1 because arrays are [length - 1]
+            rules[emptyIndex] = r;
+            numRules++;
+
+            return true;
+        }
+
+        else {
+            //System.out.println("Error: not enough space");
+            return false;
+        }
+    }
 
     public Rule[] getRules() {
         return rules;
